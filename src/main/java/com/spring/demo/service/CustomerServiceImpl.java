@@ -27,7 +27,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void save(Customer user){
 	   
-		//this.customerdao.saveLog(new CustomerLog(user.getCustid(), user.getCustname()));
+		customerdao.saveLog(new CustomerLog(user.getCustid(), user.getCustname()));
 		
 		if(customerdao.checkEmail(user.getEmail())) {
 			throw new EmailExistException("Email by id : "+user.getEmail()+" Already Exist");

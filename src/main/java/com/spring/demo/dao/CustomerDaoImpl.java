@@ -81,6 +81,8 @@ public class CustomerDaoImpl implements CustomerDao {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		session.save(log);
+		session.getTransaction().commit();
+		session.close();
 	}
 
 }
