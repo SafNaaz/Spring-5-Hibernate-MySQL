@@ -21,7 +21,7 @@ public class CustomerDaoImpl implements CustomerDao {
 	private SessionFactory sessionFactory;
 	
 	@Override
-	public boolean save(Customer user) {
+	public Error save(Customer user) {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		try {
@@ -30,13 +30,14 @@ public class CustomerDaoImpl implements CustomerDao {
 		} catch (Exception e) {
 			if(e.getCause() instanceof ConstraintViolationException){
 				System.out.println("custid already exists");
-				return false;
+				return new Error("custid already exists", e.getCause());
 			}
 			e.printStackTrace();
-			return false;
+			System.out.println("failed to add customer");
+			return new Error(e.getCause());
 		}
 		session.close();
-		return true;
+		return new Error("success", null);
 	}
 
 	@Override

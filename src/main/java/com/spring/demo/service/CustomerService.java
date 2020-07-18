@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.demo.model.Customer;
 @Transactional
 public interface CustomerService {
-   void save(Customer user) ;
+   void save(Customer user) throws Throwable ;
  
   List<Customer> getAllCustomers();
 }

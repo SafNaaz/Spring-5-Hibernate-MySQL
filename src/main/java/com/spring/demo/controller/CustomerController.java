@@ -76,7 +76,10 @@ public class CustomerController {
 	        	view =new ModelAndView("editcustomers");
 	        	view.addObject("message", e.getMessage());
 	        	//return view;
-	        }
+	        } catch (Throwable e) {
+				view =new ModelAndView("editcustomers");
+	        	view.addObject("message", "failed to add customer");
+			}
 	        model.addAttribute("users", customerservice.getAllCustomers());
 	   
 	       // view = new ModelAndView("redirect:/");

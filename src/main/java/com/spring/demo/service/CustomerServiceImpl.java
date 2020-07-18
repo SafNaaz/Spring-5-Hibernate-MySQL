@@ -25,9 +25,9 @@ public class CustomerServiceImpl implements CustomerService {
 	private CustomerDao customerdao;
 
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void save(Customer user){
+	public void save(Customer user) throws Throwable{
 	   
-		customerdao.saveLog(new CustomerLog(user.getCustid(), user.getCustname()));
+//		customerdao.saveLog(new CustomerLog(user.getCustid(), user.getCustname()));
 		
 		if(customerdao.checkEmail(user.getEmail())) {
 			throw new EmailExistException("Email by id : "+user.getEmail()+" Already Exist");
@@ -35,8 +35,14 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new PhonenoExistException("Phone no : "+user.getPhoneno()+" Already Exist");
 		}
 		
-		if(!customerdao.save(user)){
-			throw new DuplicateCustidException("Customer Id : "+user.getCustid()+" Already Exist");
+		Error error = customerdao.save(user);
+		if(error != null && error.getCause() != null){
+			System.out.println(error.getMessage() +" : "+error.getCause());
+			if(error.getMessage() != null && error.getMessage().equalsIgnoreCase("custid already exists")){
+				throw new DuplicateCustidException("Customer Id : "+user.getCustid()+" Already Exist");
+			}else{
+				throw error.getCause();
+			}
 		}
 		
 	}
