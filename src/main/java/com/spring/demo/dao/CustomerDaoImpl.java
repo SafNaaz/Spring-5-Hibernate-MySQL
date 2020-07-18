@@ -26,6 +26,7 @@ public class CustomerDaoImpl implements CustomerDao {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		session.save(user);
+		session.close();
 	}
 
 	@Override
@@ -36,7 +37,9 @@ public class CustomerDaoImpl implements CustomerDao {
 		TypedQuery<Customer> query = session
 				.createQuery("from Customer as a  where a.email = :email");
 		query.setParameter("email", email);
-		return query.getResultList().size() > 0;
+		boolean result = query.getResultList().size() > 0;
+		session.close();
+		return result;
 	}
 
 	@Override
@@ -47,7 +50,9 @@ public class CustomerDaoImpl implements CustomerDao {
 		TypedQuery<Customer> query = session
 				.createQuery("from Customer as a  where a.phoneno = :phoneno");
 		query.setParameter("phoneno", phoneno);
-		return query.getResultList().size() > 0;
+		boolean result = query.getResultList().size() > 0;
+		session.close();
+		return result;
 	}
 
 	@Override
@@ -56,7 +61,9 @@ public class CustomerDaoImpl implements CustomerDao {
 		session.beginTransaction();
 		@SuppressWarnings("unchecked")
 		TypedQuery<Customer> query = session.createQuery("from Customer");
-		return query.getResultList();
+		List<Customer> result = query.getResultList();
+		session.close();
+		return result;
 	}
 
 	@Override
