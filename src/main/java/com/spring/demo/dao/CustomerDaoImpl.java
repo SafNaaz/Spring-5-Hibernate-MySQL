@@ -2,12 +2,11 @@ package com.spring.demo.dao;
 
 import java.util.List;
 
-
-
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -22,12 +21,22 @@ public class CustomerDaoImpl implements CustomerDao {
 	private SessionFactory sessionFactory;
 	
 	@Override
-	public void save(Customer user) {
+	public boolean save(Customer user) {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		session.save(user);
-		session.getTransaction().commit();
+		try {
+			session.save(user);
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			if(e.getCause() instanceof ConstraintViolationException){
+				System.out.println("custid already exists");
+				return false;
+			}
+			e.printStackTrace();
+			return false;
+		}
 		session.close();
+		return true;
 	}
 
 	@Override

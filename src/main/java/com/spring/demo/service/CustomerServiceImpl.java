@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.demo.dao.CustomerDao;
+import com.spring.demo.exception.DuplicateCustidException;
 import com.spring.demo.exception.EmailExistException;
 import com.spring.demo.exception.PhonenoExistException;
 import com.spring.demo.model.Customer;
@@ -34,7 +35,9 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new PhonenoExistException("Phone no : "+user.getPhoneno()+" Already Exist");
 		}
 		
-		customerdao.save(user);
+		if(!customerdao.save(user)){
+			throw new DuplicateCustidException("Customer Id : "+user.getCustid()+" Already Exist");
+		}
 		
 	}
   
